@@ -3,10 +3,11 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:tasks-db}
+    url: ${DATABASE_ADDRESS:jdbc:postgresql://localhost:5432/tasks-db}
     username: ${DB_USER:postgres}
     password: ${DB_PASS:local_password}
 
-security:
-  jwt:
-    secret: ${JWT_SECRET:a_very_long_local_development_secret_key_12345}
+logging:
+  level:
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+

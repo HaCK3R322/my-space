@@ -9,14 +9,20 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 class SecurityConfiguration {
+
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain? {
-        http.authorizeHttpRequests { matcher ->
-            matcher.anyRequest().anonymous()
-        }
+        http
+            // Разрешаем анонимный доступ ко всем запросам
+            .authorizeHttpRequests { matcher ->
+                matcher.anyRequest().permitAll()
+            }
+            // Отключаем CSRF, чтобы пропускать POST-запросы без токена
+            .csrf { csrf ->
+                csrf.disable()
+            }
 
         return http.build()
     }
-
 }
