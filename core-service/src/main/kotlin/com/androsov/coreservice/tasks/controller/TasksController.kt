@@ -3,6 +3,7 @@ package com.androsov.coreservice.tasks.controller
 import com.androsov.coreservice.tasks.model.dto.TaskCreateRequestDto
 import com.androsov.coreservice.tasks.model.dto.TaskCreateResponseDto
 import com.androsov.coreservice.tasks.model.dto.TaskDto
+import com.androsov.coreservice.tasks.model.dto.completion.CompleteTaskRequest
 import com.androsov.coreservice.tasks.service.TaskService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,9 +24,7 @@ class TasksController(
                 request = taskCreateRequestDto
             )
 
-        val response = TaskCreateResponseDto.from(createdTask)
-
-        return response
+        return TaskCreateResponseDto.from(createdTask)
     }
 
     @GetMapping("/tasks")
@@ -38,4 +37,15 @@ class TasksController(
 
     @DeleteMapping("/tasks")
     fun deleteAllTasks() = taskService.deleteAllTasks()
+
+    @PostMapping("/tasks/{taskId}/complete")
+    fun completeTask(
+        @PathVariable taskId: UUID,
+        @RequestBody completeTaskRequest: CompleteTaskRequest
+    ) {
+        return taskService.completeTask(
+            taskId = taskId,
+            dateTime = completeTaskRequest.dateTime
+        )
+    }
 }

@@ -6,6 +6,9 @@ spring:
     url: ${DATABASE_ADDRESS:jdbc:postgresql://localhost:5432/tasks-db}
     username: ${DB_USER:postgres}
     password: ${DB_PASS:local_password}
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 logging:
   level:

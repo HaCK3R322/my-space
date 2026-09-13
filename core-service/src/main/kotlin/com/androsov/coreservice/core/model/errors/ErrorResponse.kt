@@ -1,4 +1,4 @@
-package com.androsov.coreservice.tasks.model.inner.errors
+package com.androsov.coreservice.core.model.errors
 
 import java.time.Instant
 

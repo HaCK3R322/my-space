@@ -32,6 +32,8 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.7.3")
 
     // ЗАМЕНЕНО: тест-стартер для JPA
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
