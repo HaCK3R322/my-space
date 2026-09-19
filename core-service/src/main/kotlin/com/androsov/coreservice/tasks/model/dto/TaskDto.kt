@@ -3,11 +3,10 @@ package com.androsov.coreservice.tasks.model.dto
 import com.androsov.coreservice.tasks.model.inner.Task
 import java.sql.Time
 import java.time.DayOfWeek
-import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Date
-import java.util.UUID
+import java.time.LocalTime
+import java.util.*
 
 data class TaskDto(
     val id: UUID,
@@ -27,8 +26,23 @@ data class TaskDto(
     val lastDay: LocalDate? = null,
 
     // completion
-    val completions: List<LocalDateTime>
+    val completions: List<CompletionDto>
 ) {
+    data class CompletionDto(
+        val completedDate: LocalDate,
+        val completedStartTime: LocalTime,
+        val completedAt: LocalDateTime,
+    ) {
+        companion object {
+            fun from(model: Task.Completion) =
+                CompletionDto(
+                    completedDate = model.completedDate,
+                    completedStartTime = model.completedStartTime,
+                    completedAt = model.completedAt,
+                )
+        }
+    }
+
     companion object {
         fun from(task: Task) =
             TaskDto(
@@ -42,7 +56,7 @@ data class TaskDto(
                 durationInMinutes = task.durationInMinutes,
                 firstDay = task.firstDay,
                 lastDay = task.lastDay,
-                completions = task.completions
+                completions = task.completions.map { CompletionDto.from(it) }
             )
     }
 }

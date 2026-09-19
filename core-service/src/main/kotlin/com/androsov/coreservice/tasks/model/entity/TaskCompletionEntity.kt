@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.UUID
@@ -18,7 +18,7 @@ data class TaskCompletionEntity(
     val id: UUID? = null,
 
     val taskId: UUID,
-    val completedDayOfWeek: DayOfWeek,
+    val completedDate: LocalDate,
     val completedStartTime: LocalTime,
 
     val completedAt: LocalDateTime

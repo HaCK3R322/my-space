@@ -2,6 +2,7 @@ package com.androsov.coreservice.tasks.service
 
 import com.androsov.coreservice.tasks.model.inner.Task
 import com.androsov.coreservice.tasks.model.dto.TaskCreateRequestDto
+import com.androsov.coreservice.tasks.model.dto.completion.CompleteTaskRequest
 import com.androsov.coreservice.tasks.model.entity.TaskCompletionEntity
 import com.androsov.coreservice.tasks.model.entity.TaskEntity
 import com.androsov.coreservice.tasks.repository.TaskCompletionRepository
@@ -60,12 +61,17 @@ class TaskService(
         taskRepository.deleteAll()
     }
 
-    fun completeTask(taskId: UUID, dateTime: LocalDateTime) {
+    fun completeTask(
+        taskId: UUID,
+        request: CompleteTaskRequest
+    ) {
         if (!taskRepository.existsById(taskId)) throw IllegalArgumentException("Task not found with id: $taskId")
 
         taskCompletionRepository.save(TaskCompletionEntity(
             taskId = taskId,
-            completedAt = dateTime
+            completedDate = request.completedDate,
+            completedStartTime = request.completedStartTime,
+            completedAt = request.completedAt
         ))
     }
 }

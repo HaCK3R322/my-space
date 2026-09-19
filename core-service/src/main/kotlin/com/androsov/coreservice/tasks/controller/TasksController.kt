@@ -42,10 +42,5 @@ class TasksController(
     fun completeTask(
         @PathVariable taskId: UUID,
         @RequestBody completeTaskRequest: CompleteTaskRequest
-    ) {
-        return taskService.completeTask(
-            taskId = taskId,
-            dateTime = completeTaskRequest.dateTime
-        )
-    }
+    ) = taskService.completeTask(taskId, completeTaskRequest)
 }

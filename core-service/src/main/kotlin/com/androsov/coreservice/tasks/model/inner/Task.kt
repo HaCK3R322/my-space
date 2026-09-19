@@ -6,6 +6,7 @@ import java.sql.Time
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
 
 data class Task(
@@ -28,14 +29,32 @@ data class Task(
     val lastDay: LocalDate? = null,
 
     // completion
-    val completions: List<LocalDateTime>
+    val completions: List<Completion>
 ) {
+    data class Completion(
+        val completedDate: LocalDate,
+        val completedStartTime: LocalTime,
+        val completedAt: LocalDateTime,
+    ) {
+        companion object {
+            fun from(entity: TaskCompletionEntity) =
+                Completion(
+                    completedDate = entity.completedDate,
+                    completedStartTime = entity.completedStartTime,
+                    completedAt = entity.completedAt,
+                )
+        }
+    }
+
     companion object {
         fun from(
             entity: TaskEntity,
             taskCompletionEntities: List<TaskCompletionEntity>,
         ): Task {
-            val completions = taskCompletionEntities.filter { it.taskId == entity.id }.map { it.completedAt }
+            val completions =
+                taskCompletionEntities
+                    .filter { it.taskId == entity.id }
+                    .map { Completion.from(it) }
 
             return Task(
                 id = entity.id ?: error("Task has null id"),
