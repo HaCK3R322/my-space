@@ -1,0 +1,11 @@
+###
+POST http://localhost:8080/tasks
+Content-Type: application/json
+
+{
+  "description": "Утренняя пробежка",
+  "daysOfWeekRepeat": ["MONDAY", "WEDNESDAY", "FRIDAY"],
+  "time": "07:00:00",
+  "firstDay": "2024-06-01",
+  "lastDay": "2024-08-31"
+}
