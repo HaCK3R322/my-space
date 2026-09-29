@@ -1,4 +1,4 @@
-package com.androsov.coreservice.core.model.errors
+package com.androsov.coreservice.core.exceptions
 
 import java.time.Instant
 

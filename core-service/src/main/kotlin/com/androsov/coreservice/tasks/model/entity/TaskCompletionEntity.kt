@@ -13,13 +13,9 @@ import java.util.UUID
 @Entity
 @Table(name = "tasks_completions")
 data class TaskCompletionEntity(
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID? = null,
-
+    @Id val id: UUID,
     val taskId: UUID,
     val completedDate: LocalDate,
     val completedStartTime: LocalTime,
-
-    val completedAt: LocalDateTime
+    val completedAt: LocalDateTime,
 )

@@ -1,6 +1,6 @@
-package com.androsov.coreservice.core
+package com.androsov.coreservice.core.exceptions
 
-import com.androsov.coreservice.core.model.errors.ErrorResponse
+import com.androsov.coreservice.core.exceptions.ErrorResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
