@@ -10,7 +10,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "tasks")
-class TaskEntity(
+data class TaskEntity(
     @Id val id: UUID,
     // Полезная информация
     val description: String,
