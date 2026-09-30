@@ -2,15 +2,15 @@ package com.androsov.coreservice.finance.service
 
 import com.androsov.coreservice.core.util.UUIDGenerator
 import com.androsov.coreservice.finance.model.dto.BalanceCreateRequestDto
-import com.androsov.coreservice.finance.model.dto.change.BalanceChangeRequest
-import com.androsov.coreservice.finance.model.entity.Balance
-import com.androsov.coreservice.finance.model.entity.BalanceChange
-import com.androsov.coreservice.finance.model.inner.Balance as BalanceModel
+import com.androsov.coreservice.finance.model.dto.change.CreateBalanceChangeRequestDto
+import com.androsov.coreservice.finance.model.entity.BalanceChangeEntity
+import com.androsov.coreservice.finance.model.entity.BalanceEntity
 import com.androsov.coreservice.finance.repository.BalanceChangeRepository
 import com.androsov.coreservice.finance.repository.BalanceRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.UUID
+import com.androsov.coreservice.finance.model.inner.Balance as BalanceModel
 
 @Service
 class BalanceService(
@@ -20,7 +20,7 @@ class BalanceService(
 ) {
     fun createBalance(request: BalanceCreateRequestDto): BalanceModel {
         val balanceEntity =
-            Balance(
+            BalanceEntity(
                 id = uuidGenerator.generate(),
                 name = request.name,
             )
@@ -29,34 +29,33 @@ class BalanceService(
 
         return BalanceModel.from(
             entity = savedBalance,
-            balanceChangeEntities = listOf(),
+            balanceChangeEntityEntities = listOf(),
         )
     }
 
     fun getAllBalances(): List<BalanceModel> {
-        val balanceEntities: List<Balance> = balanceRepository.findAll().toList()
+        val balanceEntityEntities: List<BalanceEntity> = balanceRepository.findAll().toList()
 
-        val balanceChangeEntities: List<BalanceChange> = balanceChangeRepository.findAll().toList()
+        val balanceChangeEntityEntities: List<BalanceChangeEntity> = balanceChangeRepository.findAll().toList()
 
-        return balanceEntities.map { balanceEntity ->
+        return balanceEntityEntities.map { balanceEntity ->
             BalanceModel.from(
                 entity = balanceEntity,
-                balanceChangeEntities = balanceChangeEntities,
+                balanceChangeEntityEntities = balanceChangeEntityEntities,
             )
         }
     }
 
     fun getBalanceById(id: UUID): BalanceModel {
-        val balanceEntity: Balance =
-            balanceRepository.findByIdOrNull(id)
-                ?: throw IllegalArgumentException("Balance not found with id: $id")
+        val balanceEntity: BalanceEntity =
+            balanceRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Balance not found with id: $id")
 
-        val balanceChangeEntities: List<BalanceChange> =
+        val balanceChangeEntityEntities: List<BalanceChangeEntity> =
             balanceChangeRepository.findAllByBalanceId(balanceEntity.id)
 
         return BalanceModel.from(
             entity = balanceEntity,
-            balanceChangeEntities = balanceChangeEntities,
+            balanceChangeEntityEntities = balanceChangeEntityEntities,
         )
     }
 
@@ -64,26 +63,28 @@ class BalanceService(
         balanceRepository.deleteAll()
     }
 
-    fun addChange(
-        balanceId: UUID,
-        request: BalanceChangeRequest,
-    ): BalanceModel {
-        if (!balanceRepository.existsById(balanceId)) {
-            throw IllegalArgumentException("Balance not found with id: $balanceId")
-        }
+    fun createBalanceChange(request: CreateBalanceChangeRequestDto) {
+        request.validate()
 
-        balanceChangeRepository.save(
-            BalanceChange(
+        val existingChanges = balanceChangeRepository.findAll()
+
+        val requestDayChanges = existingChanges.filter { it.date == request.date }.sortedBy { it.order }
+
+        val newBalanceChangeOrder = (requestDayChanges.firstOrNull()?.order ?: 0) + 1
+
+        val balanceChangeEntity =
+            BalanceChangeEntity(
                 id = uuidGenerator.generate(),
-                dateTime = request.dateTime,
-                change = request.change,
+                date = request.date,
+                order = newBalanceChangeOrder,
+                amount = request.amount,
                 title = request.title,
-                balanceId = balanceId,
+                type = request.type,
+                balanceId = request.balanceId,
                 balanceFrom = request.balanceFrom,
                 balanceTo = request.balanceTo,
-            ),
-        )
+            )
 
-        return getBalanceById(balanceId)
+        balanceChangeRepository.save(balanceChangeEntity)
     }
 }

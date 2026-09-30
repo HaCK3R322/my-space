@@ -3,7 +3,7 @@ package com.androsov.coreservice.finance.controller
 import com.androsov.coreservice.finance.model.dto.BalanceCreateRequestDto
 import com.androsov.coreservice.finance.model.dto.BalanceCreateResponseDto
 import com.androsov.coreservice.finance.model.dto.BalanceDto
-import com.androsov.coreservice.finance.model.dto.change.BalanceChangeRequest
+import com.androsov.coreservice.finance.model.dto.change.CreateBalanceChangeRequestDto
 import com.androsov.coreservice.finance.service.BalanceService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -41,6 +41,6 @@ class BalanceController(
     @PostMapping("/balances/{balanceId}/changes")
     fun addChange(
         @PathVariable balanceId: UUID,
-        @RequestBody balanceChangeRequest: BalanceChangeRequest,
-    ): BalanceDto = BalanceDto.from(balanceService.addChange(balanceId, balanceChangeRequest))
+        @RequestBody createBalanceChangeRequestDto: CreateBalanceChangeRequestDto,
+    ): BalanceDto = BalanceDto.from(balanceService.addChange(balanceId, createBalanceChangeRequestDto))
 }

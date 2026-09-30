@@ -7,7 +7,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "balances")
-data class Balance(
+data class BalanceEntity(
     @Id val id: UUID,
     val name: String,
 )
